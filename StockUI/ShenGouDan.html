@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>申购单管理</title>
+		<link rel="stylesheet" type="text/css" href="../easyui/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="../easyui/themes/icon.css">
+		<link rel="stylesheet" type="text/css" href="../easyui/demo/demo.css">
+		<script type="text/javascript" src="../easyui/jquery.min.js"></script>
+		<script type="text/javascript" src="../easyui/jquery.easyui.min.js"></script>
+		<link rel="stylesheet" href="../layui/css/layui.css" media="all">
+		<script src="../layui/layui.js" charset="utf-8"></script>
+		<link rel="stylesheet" href="css/style.css" media="all">
+		<script type="text/javascript" src="js/ShenGouDan.js"></script>
+		
+
+	</head>
+
+	<body style="background-color: whitesmoke;">
+
+		<div class="layui-fluid">
+			<div class="layui-col-md12" style="height: 10px;">
+			</div>
+			<div class="layui-col-md12" style="background-color: #4e4e70;height: 20px;">
+				<font color="white">申购单管理</font>
+			</div>
+			<div class="layui-row layui-col-space8">
+				<!--左边开始 -->
+				<div class="layui-col-md2" style="height: 650px;">
+					<!--搜索框开始 -->
+					<div class="layui-col-md12" style="padding-bottom: 2px;">
+						<form class="layui-form" action="">
+							<div class="layui-form">
+								<div class="layui-block">
+									<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="申购单编号/申购单名称/状态搜索" class="layui-input" style="height: 30px;width: 100%;">
+									<i id="select" class="layui-icon" style="position: absolute; right: 5px;top: 10px;">&#xe615;</i>
+								</div>
+							</div>
+						</form>
+					</div>
+					<!--搜索框结束 -->
+					
+					
+					<div class="layui-col-md12" style="background-color: #4e4e70;height: 20px;">
+						<font color="white">申购单主表</font>
+					</div>
+					<!--申购单主表开始 -->
+					<div class="layui-col-md12" style="height: 620px;">
+						<table id="l_dg" name="l_dg" class="easyui-datagrid" data-options="rownumbers:true,
+		    toolbar: '#sb',
+		    onClickRow: Serch_Ord,
+		    singleSelect:true,
+			autoRowHeight:false,
+			pagination:true,
+			pageSize:10" style="width: 100%;height: 100%;">
+							<thead>
+								<tr>
+									<th data-options="field:'CGSG_ID'" align="center" style="width: 65px;height: 25px;">
+										<font style="font-size: 12px;">申购单编号</font>
+									</th>
+									<th data-options="field:'CGSG_Name'" align="center" style="width: 65px;height: 25px;">
+										<font style="font-size: 12px;">申购单名称</font>
+									</th>
+									<th data-options="field:'CGSG_State'" align="center" style="width: 65px;height: 25px;">
+										<font style="font-size: 12px;">状态</font>
+									</th>
+									
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<!--盘点单主表结束 -->
+				</div>
+				<!--左边结束 -->
+
+				<!--右边开始 -->
+				<div class="layui-col-md10" style="height: 650px;">
+					<!--按钮开始 -->
+					<div class="layui-col-md12" style="padding-bottom: 4px;background-color: white;">
+						<form class="layui-form" action="">
+							<!--<div class="layui-form" style="margin: 5px 0px 0px 10px;">-->
+								<button id="insert"  type="button" class="layui-btn layui-btn-sm btn">新增</button>
+								<button id="del"  type="button" class="layui-btn layui-btn-sm btn">删除</button>
+								<button id="update" type="button" class="layui-btn layui-btn-sm btn">修改</button>
+								<button  id="save" type="button"  class="layui-btn layui-btn-sm btn">保存</button>
+								
+								<button id="check" type="button" class="layui-btn layui-btn-sm btn">审核</button>
+								
+								<button id="re" type="button" class="layui-btn layui-btn-sm btn">刷新</button>
+							<!--</div>-->
+						</form>
+					</div>
+					<!--按钮结束 -->
+					<div class="layui-col-md12" style="background-color: #4e4e70;height: 20px;">
+						<font color="white">基本信息</font>
+					</div>
+					<!--表单开始 -->
+					<div class="layui-col-md12" style="background-color: white;padding: 5px 0px; ">
+						<form id="form_1" name="form_1" class="layui-form" action="">
+							<div class="layui-form-item">
+								<table>
+									<tr>
+										<td>
+											<div class="layui-inline" style="margin-left: -40px;">
+												<label class="layui-form-label label">申购单编号</label>
+												<div  class="layui-input-inline">
+													<input  id="CGSG_ID" name="CGSG_ID"  class="layui-input input" />
+												</div>
+											</div>
+										</td>
+										<td>
+											<div class="layui-inline" style="margin-left: -120px;">
+												<label class="layui-form-label label"><font color="red">*</font>申购单名称</label>
+												<div  class="layui-input-inline">
+													<input id="CGSG_Name" name="CGSG_Name" type="tel"  lay-verify="required|phone" autocomplete="off" class="layui-input input" />
+												</div>
+											</div>
+										</td>
+										
+										<td>
+											<div class="layui-inline" style="margin-left: -120px;">
+												<label class="layui-form-label label">申购类别</label>
+												<div class="layui-inline">
+													<select id="CGSG_Type" name="CGSG_Type"  lay-verify="required"  >
+														<option value="1">1</option>
+														<option value="2">2</option>
+														<option value="3">3</option>
+													</select>
+												</div>
+												</div>
+											</div>
+										</td>
+										
+									</tr>
+									<tr>
+										<td>
+											<div class="layui-inline" style="margin-left: -40px;">
+												<label class="layui-form-label label">申购部门</label>
+												<div  class="layui-input-inline">
+													<input id="CGSG_Department" name="CGSG_Department"  type="tel" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input input" />
+												</div>
+											</div>
+										</td>
+										
+										
+										<td>
+											<div class="layui-inline" style="margin-left: -120px;">
+												<label class="layui-form-label label">申请人</label>
+												<div  class="layui-input-inline">
+													<input id="CGSG_Apply" name="CGSG_Apply" class="layui-input input" />
+												</div>
+											</div>
+										</td>
+										
+										<td>
+											<div class="layui-inline" style="margin-left: -120px;">
+												<label class="layui-form-label label">申购日期</label>
+												<div class="layui-input-inline">
+													<input type="text" class="layui-input input" id="CGSG_ApplyDay" name="CGSG_ApplyDay">
+													<i class="layui-icon" style="position: absolute; right: 75px;top: 2px;">&#xe637;</i>
+												</div>
+												
+											</div>
+										</td>
+									</tr>
+									
+									<tr>
+										<td>
+											<div class="layui-inline" style="margin-left: -40px;">
+												<label class="layui-form-label label">结束日期</label>
+												<div id="EndDay" class="layui-input-inline">
+													<input type="text" class="layui-input input" id="CGSG_ApplyEndDay" name="CGSG_ApplyEndDay">
+													<i class="layui-icon" style="position: absolute; right: 75px;top: 2px;">&#xe637;</i>
+												</div>
+											</div>
+										</td>
+										
+										
+										<td>
+											<div class="layui-inline" style="margin-left: -120px;">
+												<label class="layui-form-label label">状态</label>
+												<div  class="layui-input-inline">
+													<input id="CGSG_State" name="CGSG_State" class="layui-input input" readonly="readonly"/>
+												</div>
+											</div>
+										</td>
+									</tr>
+									
+									
+									<tr>
+										<td>
+											<div class="layui-inline" style="margin-left: -40px;">
+												<label class="layui-form-label label">备注</label>
+												<div  class="layui-input-inline">
+													<input type="tel" id="CGSG_Te" name="CGSG_Te" lay-verify="required|phone" autocomplete="off" class="layui-input input"
+														style="width: 520px;" />
+												</div>
+											</div>
+										</td>
+									</tr>
+									
+									
+
+								</table>
+							</div>
+
+						</form>
+					</div>
+					<!--表单结束 -->
+
+					<div class="layui-col-md12" style="background-color: #4e4e70;height: 20px;margin: -28px 0px 0px 0px;">
+						<font color="white">物料详情</font>
+					</div>
+
+					<!--按钮搜索框开始-->
+					<div class="layui-col-md12" style="background-color: white;margin-top: -10px;">
+						<form class="layui-form" action="">
+							<div class="layui-form" style="margin: 0px 0px 0px 10px;">
+								<button id="append" type="button" class="layui-btn layui-btn-sm btn">新增物料</button>
+								<button id="delw" type="button" class="layui-btn layui-btn-sm btn">删除物料</button>
+								<button id="edit-line" type="button" class="layui-btn layui-btn-sm btn">修改物料</button>
+								<button id="ok-line" type="button" class="layui-btn layui-btn-sm btn">确定</button>
+								<div class="layui-inline">
+									<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入物料名称" class="layui-input" style="width: 250px;height: 30px;">
+									<i  class="layui-icon" style="position: absolute; right: 5px;top: 10px;">&#xe615;</i>
+								</div>
+								
+
+							</div>
+						</form>
+					</div>
+					<!--按钮搜索框结束-->
+					
+
+					<!--物料详情开始-->
+					<div class="layui-col-md12" style="padding-bottom: 4px;background-color: white;">
+						<div class="layui-col-md12" style="height: 487px;">
+							<table id="l_dg2" name="l_dg2" class="easyui-datagrid" data-options="rownumbers:true,
+		    toolbar: '#sb',
+		    singleSelect:true,
+		    onClickCell: Serch_Ord_a,
+			autoRowHeight:false,
+			pagination:true,
+			pageSize:10" style="width: 100%;height: 100%;">
+								<thead>
+									<tr>
+										
+										<th data-options="field:'WL_Id',editor:'textbox'" align="center" style="width: 65px;height: 25px;">
+											<font style="font-size: 12px;">物料编码</font>
+										</th>
+										<th data-options="field:'WL_Name',editor:'textbox'" align="center" style="width: 60px;height: 25px;">
+											<font style="font-size: 12px;"> 物料名称</font>
+										</th>
+										<th data-options="field:'Wl_Ggxh',editor:'textbox'" align="center" style="width: 60px;height: 25px;">
+											<font style="font-size: 12px;">规格型号</font>
+										</th>
+										<th data-options="field:'Wl_Danwei',editor:'textbox'" align="center" style="width: 65px;height: 25px;">
+											<font style="font-size: 12px;">单位</font>
+										</th>
+										<th data-options="field:'Wl_Num',editor:'textbox'" align="center" style="width: 65px;height: 25px;">
+											<font style="font-size: 12px;">数量</font>
+										</th>
+										<th data-options="field:'Wl_YT',editor:'textbox'" align="center" style="width: 60px;height: 25px;">
+											<font style="font-size: 12px;">用途</font>
+										</th>
+										<th data-options="field:'Wl_Day',editor:'textbox'" align="center" style="width: 65px;height: 25px;">
+											<font style="font-size: 12px;">需求日期</font>
+										</th>
+										
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+					<!--结束-->
+				</div>
+				<!--右边结束 -->
+			</div>
+			<!--
+            	作者：2410841714@qq.com
+            	时间：2019-06-09
+            	描述：window
+            -->
+			<div id="window" class="easyui-window" title="选择窗体" data-options="modal:true,closed:true,iconCls:'icon-save'" style="width:700px;height:400px;padding:10px;">
+				<table id="l_dg1" name="l_dg1" class="easyui-datagrid" data-options="rownumbers:true,
+		    toolbar: '#sb1',
+		    singleSelect:false,
+			autoRowHeight:false,		
+			pagination:true,
+			pageSize:10" style="width: 100%;height: 100%;">
+					<thead>
+						<tr>
+							<th data-options="field:'WL_Id'" align="center" style="width: 65px;height: 25px;">
+								<font style="font-size: 12px;">物料编码</font>
+							</th>
+							<th data-options="field:'WL_Name'" align="center" style="width: 60px;height: 25px;">
+								<font style="font-size: 12px;"> 物料名称</font>
+							</th>
+							<th data-options="field:'WL_ABC'" align="center" style="width: 65px;height: 25px;">
+								<font style="font-size: 12px;">物料类型</font>
+							</th>
+							<th data-options="field:'Wl_Ggxh'" align="center" style="width: 60px;height: 25px;">
+								<font style="font-size: 12px;"> 规格型号</font>
+							</th>
+							<th data-options="field:'Wl_Gzm'" align="center" style="width: 60px;height: 25px;">
+								<font style="font-size: 12px;"> 购置编码</font>
+							</th>
+						</tr>
+					</thead>
+				</table>
+				<div id="sb1" style="height:auto">
+					<a href="javascript:void(0)" id="go" class="easyui-linkbutton">确 认</a>
+				</div>
+			</div>
+
+			<div id="Rel_Bill_tc" class="easyui-window" title="选择窗体" data-options="modal:true,closed:true,iconCls:'icon-save'" style="width:700px;height:400px;padding:10px;">
+
+			</div>
+		</div>
+
+		<!--时间js开始-->
+		<script>
+			layui.use('laydate', function() {
+				var laydate = layui.laydate;
+
+				//执行一个laydate实例
+				laydate.render({
+					elem: '#CGSG_ApplyDay' //指定元素
+				});
+			});
+		</script>
+		
+		<script>
+			layui.use('laydate', function() {
+				var laydate = layui.laydate;
+
+				//执行第二个laydate实例
+				laydate.render({
+					elem: '#CGSG_ApplyEndDay' //指定元素
+				});
+			});
+		</script>
+		<script>
+			layui.use('laydate', function() {
+				var laydate = layui.laydate;
+
+				//执行三个laydate实例
+				laydate.render({
+					elem: '#test3' //指定元素
+				});
+			});
+		</script>
+
+		<!--表单js-->
+		<script type="text/javascript">
+			var editIndex = undefined;
+			var editorid = 0;
+
+			function Serch_Ord(rowIndex, rowData) { //查询菜单单据查询刷新模块
+				$('#form_1').form('load',rowData);
+//			alert(JSON.stringify(rowData));
+//				var Tab_Name = "CUSTOM";
+//				var customd = rowData['CUST_ID'];
+//				var Titles = " where CUST_ID like '" + customd + "%'";
+//
+//				if(customd) {
+//					//================================================产品主要信息查询========
+//					$.post("../php/Form_query.php", {
+//							'Tab_name': Tab_Name,
+//							'cont': Titles
+//						},
+//						function(data) {
+//							$('#cust_info').form('load', data);
+//						}, "json");
+//				}
+			}
+
+			function Serch_left() {
+				var Tab_name = "CUSTOMD";
+				var cust_id = $("#CUSTID").val();
+				var Titles = " where CUST_ID like '" + cust_id + "%'";
+				$.post("../php/Tab_query.php", {
+						'Tab_Name': Tab_name,
+						'Cont': Titles
+					},
+					function(data1) {
+						$("#l_dg").datagrid({
+							data: data1
+						});
+					},
+					"json");
+			}
+
+			function Save_info() {
+				var Tab_Name = "CUSTOM";
+				var customd = $("#CUST_ID").val();
+				var Titles = " where CUST_ID like '" + customd + "%'";
+				var values = $("#cust_info").serializeArray();
+				var ii = values.length;
+
+				Delete_Inf();
+				$.post('../php/Form_save.php', {
+						'atr': values,
+						'Tab_name': Tab_Name,
+						'len': ii
+					},
+					function(data) {
+						$('#msg').html(data);
+					}, "json");
+
+			}
+
+			function Clear_info() { //清除所有窗体
+				$("#cust_info").form('clear');
+				//		$('#dg').datagrid('loadData', { total: 0, rows: [] });
+				//		$('#dg1').datagrid('loadData', { total: 0, rows: [] });
+			}
+
+			function Dele_info() {
+				Delete_Inf();
+				Clear_info();
+				Serch_left();
+
+			}
+
+			function Delete_Inf() {
+				var Tab_Name = "CUSTOM";
+				var customd = $("#CUST_ID").val();
+				var Cont = " where CUST_ID like '" + customd + "%'";
+				if(customd == "") {
+					return;
+				}
+				$.post('../php/Form_dele.php', {
+						'Tab_Name': Tab_Name,
+						'Cont': Cont
+					},
+					function(data) {
+						$('#msg').html(data);
+					}, "json");
+			}
+		</script>
+		<script>
+			//Demo
+			layui.use('form', function() {
+				var form = layui.form;
+				form.render();
+				//监听提交
+				form.on('submit(formDemo)', function(data) {
+					layer.msg(JSON.stringify(data.field));
+					return false;
+				});
+			});
+		</script>
+	</body>
+
+</html>
